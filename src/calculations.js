@@ -58,7 +58,15 @@ function calcPace(timeHr, timeMin, timeSec, dist, distUnit, paceUnit) {
 
     //ultimately, this is the final calculation
     var paceInSec = timeInSec/distInPaceUnit;
-    return paceInSec;
+    var calcPaceHr = Math.floor(paceInSec / 3600);
+    var calcPaceMin = Math.floor(paceInSec / 60 % 60);
+    var calcPaceSec = paceInSec - calcPaceHr * 3600 - calcPaceMin * 60;
+    return {
+        inSec: paceInSec,
+        hr: calcPaceHr,
+        min: calcPaceMin,
+        sec: calcPaceSec
+    }
 }
 
 function calcDist(args) {
@@ -69,9 +77,51 @@ function calcTime(args) {
 
 }
 
-function calcSplits(args) {
+ //return an array with each split so we can iterate over it
+function calcSplits(paceInSec, paceUnit, dist, distUnit) {
+    //**just realized that I need to consider the relationship bw the distUnit and paceUnit
+    //may just make a helper function that does all the conversions so i can use it in other functions
 
-    //return an array with each split so we can iterate over it
+    console.log(paceUnit + "&" + distUnit);
+    var paceUnitNum;
+    var distInPaceUnit;
+    if (paceUnit == "mile") {
+        paceUnitNum = 1;
+        distInPaceUnit = dist;
+    } else if (paceUnit == "400" && distUnit == "miles") {
+        console.log("hi");
+        paceUnitNum = 400;
+        distInPaceUnit = dist * 1609.344 / 2.5;
+    }
+    var accum_dist = paceUnitNum; //first split is just the pace/unit
+    var num_splits = Math.ceil(distInPaceUnit / paceUnitNum);
+    console.log("splits: " + num_splits);
+    var split_info = new Array(num_splits);
+    for (let i = 0 ; i < num_splits; i++) {
+        //****need to convert the pace to a string hh:mm:ss.xx
+        var splitInSec = paceInSec * accum_dist;
+        var calcPaceHr = Math.floor(splitInSec / 3600);
+        var calcPaceMin = Math.floor(splitInSec / 60 % 60);
+        var calcPaceSec = splitInSec - calcPaceHr * 3600 - calcPaceMin * 60;
+        var hrStr;
+
+        if (calcPaceHr === 0) {
+            hrStr = "";
+        } else {
+            hrStr = String(calcPaceHr).padStart(2, '0') + ":";
+        }
+        split_info[i] = {
+            dist: accum_dist,
+            unit: paceUnit,
+            splitTime: hrStr + String(calcPaceMin).padStart(2, '0') + ":" + calcPaceSec.toFixed(2).padStart(5, '0')
+        }
+        accum_dist += paceUnitNum;
+        if (accum_dist > dist) {
+            accum_dist = dist;
+        }
+    }
+    console.log(split_info);
+    return split_info;
 }
 
 function validTime(hr, min, sec) {
@@ -86,7 +136,7 @@ function validTime(hr, min, sec) {
     var totalInputBool = hr !== "" || min !== "" || sec !== "";
     //one must be > 0
     var totalInputBool2 = hr > 0  || min > 0 || sec > 0;
-    return hrBool && minBool && secBool && totalInputBool;
+    return hrBool && minBool && secBool && totalInputBool && totalInputBool2;
 }
 
 function validDist(dist) {

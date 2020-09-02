@@ -2,12 +2,21 @@ import React, {useState} from 'react';
 import Time from './Time';
 import Distance from './Distance';
 import Pace from './Pace';
-import { calcPace, calcDist, calcTime, calcSplits, validTime, validDist } from "./calculations";
-import { Container, Grid, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from "@material-ui/core";
-import logo from './logo.svg';
+import { calcPace, calcDist, calcTime, calcSplits, validTime, validDist,  } from "./calculations";
+import { Container, Grid, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions,
+  Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 import './App.css';
 
+
+/*const useStyles = makeStyles({
+  table: {
+    minWidth: 650,
+  },
+});
+*/
 function App() {
+  //const classes = useStyles();
   //we will only store the state here. It just makes more sense. Then, we can pass down the state
   //as props to populate the given text inputs.
   const [timeHr, setTimeHr] = useState("");
@@ -25,6 +34,7 @@ function App() {
   const [distErrDialogOpen, setDistErrDialogOpen] = useState(false);
   const [timeErrDialogOpen, setTimeErrDialogOpen] = useState(false);
   const [splitsDialogOpen, setSplitsDialogOpen] = useState(false);
+  const [splitsVec, setSplitsVec] = useState([]);
 
   //this is going to get very cumbersome...but maybe still better than just putting the
   //entire app in one page? idk man, idk.
@@ -64,21 +74,57 @@ function App() {
     setPaceUnit(unit);
   }
 
+  const calcAndSetPace = () => {
+    var hr = timeHr;
+    var min = timeMin;
+    var sec = timeSec;
+
+    if (hr === ""){
+      hr = 0;
+    }
+    if (min === "") {
+      min = 0;
+    }
+    if (sec === "") {
+      sec = 0;
+    }
+    var paceInfo = calcPace(hr, min, sec, dist, distUnit, paceUnit);
+    setPaceHr(paceInfo.hr);
+    setPaceMin(paceInfo.min);
+    setPaceSec(paceInfo.sec);
+    return paceInfo;
+  }
   const handlePaceClick = () => {
     //console.log(timeHr + ":" + timeMin + ":" + timeSec);
     //console.log(dist + " " + distUnit + ' pace unit:' + paceUnit);
     //should prob do a check to make sure there's actually numbers entered in the time and dist fields
     if (!validTime(timeHr, timeMin, timeSec) || !validDist(dist)) {
-      //could make this a dialog instead, or install the react-alert package
-      console.log("whattup");
       setPaceErrDialogOpen(true);
+    } else {
+      calcAndSetPace();
+    }
+  }
+
+  const handleDistClick = () => {
+    if (!validTime(timeHr, timeMin, timeSec) || !validTime(paceHr, paceMin, paceSec)) {
+      setDistErrDialogOpen(true);
+    } else {
+      var result = calcDist()
+      setDist(result);
+    }
+  }
+
+  //need to fix, this is just copied from the handlePace
+  const handleTimeClick = () => {
+    //should prob do a check to make sure there's actually numbers entered in the time and dist fields
+    if (!validTime(timeHr, timeMin, timeSec) || !validDist(dist)) {
+      setTimeErrDialogOpen(true);
     } else {
       var hr = timeHr;
       var min = timeMin;
       var sec = timeSec;
 
       if (hr === ""){
-        console.log(Number.isNaN(hr));
         hr = 0;
       }
       if (min === "") {
@@ -101,10 +147,12 @@ function App() {
     }
   }
 
-  const handleDistClick = () => {
-    if (!validTime(timeHr, timeMin, timeSec) || !validTime(paceHr, paceMin, paceSec)) {
-      setDistErrDialogOpen(true);
-    }
+  const handleSplitsClick = () => {
+    //**need to check if there's enough info entered to actually calculate the splits
+    //will do that later
+    var paceInfo = calcAndSetPace();
+    setSplitsVec(calcSplits(paceInfo.inSec, paceUnit, dist, distUnit));
+    setSplitsDialogOpen(true);
   }
 
   const handleReset = () => {
@@ -131,7 +179,7 @@ function App() {
           <Time hr={timeHr} min={timeMin} sec={timeSec} onHrChange={timeHrHandler} onMinChange={timeMinHandler} onSecChange={timeSecHandler}/>
         </Grid>
         <Grid item>
-          <Button variant="outlined">Calculate Time</Button>
+          <Button variant="outlined" onClick={handleTimeClick}>Calculate Time</Button>
         </Grid>
       </Grid>
       </Grid>
@@ -141,7 +189,7 @@ function App() {
           <Distance dist={dist} unit={distUnit} onDistChange={distHandler} onUnitChange={distUnitHandler}/>
         </Grid>
         <Grid item>
-          <Button variant="outlined">Calculate Distance</Button>
+          <Button variant="outlined" onClick={handleDistClick}>Calculate Distance</Button>
         </Grid>
       </Grid>
       </Grid>
@@ -158,7 +206,7 @@ function App() {
       <Grid item>
       <Grid container direction="row" alignItems="center">
         <Grid item>
-          <Button variant="outlined" onClick={() => setSplitsDialogOpen(true)}>Calculate Splits</Button>
+          <Button variant="outlined" onClick={handleSplitsClick}>Calculate Splits</Button>
         </Grid>
         <Grid item>
           <Button variant="outlined" onClick={handleReset}>Reset</Button>
@@ -168,7 +216,7 @@ function App() {
       </Grid>
 
       <Dialog open={paceErrDialogOpen} onClose={() => {setPaceErrDialogOpen(false)}} >
-            <DialogTitle>Error</DialogTitle>
+            <DialogTitle>Oops!</DialogTitle>
             <DialogContent>
             <DialogContentText>
                 To calculate pace, you must input a valid time and distance.
@@ -180,7 +228,7 @@ function App() {
       </Dialog>
 
       <Dialog open={distErrDialogOpen} onClose={() => {setDistErrDialogOpen(false)}} >
-            <DialogTitle>Error</DialogTitle>
+            <DialogTitle>Oops!</DialogTitle>
             <DialogContent>
             <DialogContentText>
                 To calculate distance, you must input a valid time and pace.
@@ -192,7 +240,7 @@ function App() {
       </Dialog>
 
       <Dialog open={timeErrDialogOpen} onClose={() => {timeErrDialogOpen(false)}} >
-            <DialogTitle>Error</DialogTitle>
+            <DialogTitle>Oops!</DialogTitle>
             <DialogContent>
             <DialogContentText>
                 To calculate time, you must input a valid distance and pace.
@@ -206,9 +254,30 @@ function App() {
       <Dialog open={splitsDialogOpen} onClose={() => {setSplitsDialogOpen(false)}} >
             <DialogTitle>Splits</DialogTitle>
             <DialogContent>
-            <DialogContentText>
-                yo this do be a test doe
-            </DialogContentText>
+              <TableContainer component={Paper}>
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell align="right">Split #</TableCell>
+                      <TableCell align="right">Distance</TableCell>
+                      <TableCell align="right">Pace Unit</TableCell>
+                      <TableCell align="right">Times</TableCell>
+                    </TableRow>
+                  </TableHead>
+                <TableBody>
+                  {splitsVec.map((row, i) => (
+                    <TableRow key={i + 1}>
+                      <TableCell component="th" scope="row">
+                        {i + 1}
+                      </TableCell>
+                      <TableCell align="right">{row.dist}</TableCell>
+                      <TableCell align="right">{row.unit}</TableCell>
+                      <TableCell align="right">{row.splitTime}</TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+                </Table>
+              </TableContainer>
             </DialogContent>
             <DialogActions>
               <Button variant="outlined" onClick={() => setSplitsDialogOpen(false)}>Close</Button>
