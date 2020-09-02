@@ -74,10 +74,31 @@ function calcSplits(args) {
     //return an array with each split so we can iterate over it
 }
 
+function validTime(hr, min, sec) {
+    //console.log(hr==="");
+    //console.log(hr >= 0 );
+    //console.log(parseInt(hr) == hr);
+    //issue: type conversion for Number.isInteger. So i will do it the jank way lol
+    var hrBool = hr === "" || (hr >= 0 && parseInt(hr) == hr);
+    var minBool = min === "" || (min >= 0 && min < 60 && parseInt(min) == min);
+    var secBool = sec === "" || (sec >= 0 && sec < 60); 
+
+    var totalInputBool = hr !== "" || min !== "" || sec !== "";
+    //one must be > 0
+    var totalInputBool2 = hr > 0  || min > 0 || sec > 0;
+    return hrBool && minBool && secBool && totalInputBool;
+}
+
+function validDist(dist) {
+    console.log(dist !== "");
+    return dist !== "" && dist > 0;
+}
 
 export {
     calcPace,
     calcDist,
     calcTime,
-    calcSplits
+    calcSplits,
+    validTime,
+    validDist
 }

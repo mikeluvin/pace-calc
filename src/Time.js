@@ -46,7 +46,7 @@ export default function Time(props) {
                                 value.match("^[0-9]*$") ? onMinChange(value) : onMinChange("");
                             }}
                             value={min}  
-                            error={min < 0 || min > 60}  /> 
+                            error={min < 0 || min >= 60}  /> 
                     </Grid>
                     <Grid item>
                         {/*need to have a diff styling for when the input is invalid*/}
@@ -62,7 +62,7 @@ export default function Time(props) {
                                 //value.match("^\\d*$") ? setSecs(event.target.value) : setSecs("");
                             }}
                             value={sec}
-                            error={sec < 0 || sec > 60} /> 
+                            error={sec < 0 || sec >= 60} /> 
                     </Grid>
                 </Grid>
             </Grid>

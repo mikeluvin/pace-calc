@@ -2,8 +2,8 @@ import React, {useState} from 'react';
 import Time from './Time';
 import Distance from './Distance';
 import Pace from './Pace';
-import { calcPace, calcDist, calcTime, calcSplits } from "./calculations";
-import { Container, Grid, Button, Dialog, DialogTitle, DialogContentText } from "@material-ui/core";
+import { calcPace, calcDist, calcTime, calcSplits, validTime, validDist } from "./calculations";
+import { Container, Grid, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions } from "@material-ui/core";
 import logo from './logo.svg';
 import './App.css';
 
@@ -21,80 +21,90 @@ function App() {
   const [paceMin, setPaceMin] = useState("");
   const [paceSec, setPaceSec] = useState("");
   const [paceUnit, setPaceUnit] = useState("mile");
-  const [dialogOpen, setDialogOpen] = useState(false);
+  const [paceErrDialogOpen, setPaceErrDialogOpen] = useState(false);
+  const [distErrDialogOpen, setDistErrDialogOpen] = useState(false);
+  const [timeErrDialogOpen, setTimeErrDialogOpen] = useState(false);
+  const [splitsDialogOpen, setSplitsDialogOpen] = useState(false);
 
   //this is going to get very cumbersome...but maybe still better than just putting the
   //entire app in one page? idk man, idk.
   const timeHrHandler = (hrs) => {
     setTimeHr(hrs);
-    console.log("hr state passed to parent");
   }
 
   const timeMinHandler = (mins) => {
     setTimeMin(mins);
-    console.log("min state passed to parent");
   }
 
   const timeSecHandler = (secs) => {
     setTimeSec(secs);
-    console.log("sec state passed to parent");
   }
 
   const distHandler = (dist) => {
     setDist(dist);
-    console.log("dist state passed to parent")
   }
 
   const distUnitHandler = (unit) => {
     setDistUnit(unit);
-    console.log("dist unit state passed to parent");
   }
 
   const paceHrHandler = (hrs) => {
     setPaceHr(hrs);
-    console.log("hr state passed to parent");
   }
 
   const paceMinHandler = (mins) => {
     setPaceMin(mins);
-    console.log("min state passed to parent");
   }
 
   const paceSecHandler = (secs) => {
     setPaceSec(secs);
-    console.log("sec state passed to parent");
   }
 
   const paceUnitHandler = (unit) => {
     setPaceUnit(unit);
-    console.log("pace unit state passed to parent");
   }
 
   const handlePaceClick = () => {
     //console.log(timeHr + ":" + timeMin + ":" + timeSec);
     //console.log(dist + " " + distUnit + ' pace unit:' + paceUnit);
     //should prob do a check to make sure there's actually numbers entered in the time and dist fields
-    if ((isNaN(timeHr) && isNaN(timeMin) && isNaN(timeSec)) || isNaN(dist)) {
+    if (!validTime(timeHr, timeMin, timeSec) || !validDist(dist)) {
       //could make this a dialog instead, or install the react-alert package
-      alert("To calculate pace, input time and distance.");
-    }
-    var hr = timeHr;
-    var min = timeMin;
-    var sec = timeSec;
+      console.log("whattup");
+      setPaceErrDialogOpen(true);
+    } else {
+      var hr = timeHr;
+      var min = timeMin;
+      var sec = timeSec;
 
-    if (isNaN(hr)) hr = 0;
-    if (isNaN(min)) min = 0;
-    if (isNaN(sec)) sec = 0;
-    var paceInSec = calcPace(hr, min, sec, dist, distUnit, paceUnit);
-    console.log(paceInSec);
-    //convert back to hh:mm:ss.xx
-    var calcPaceHr = Math.floor(paceInSec / 3600);
-    var calcPaceMin = Math.floor(paceInSec / 60 % 60);
-    var calcPaceSec = paceInSec - calcPaceHr * 3600 - calcPaceMin * 60;
-    setPaceHr(calcPaceHr);
-    setPaceMin(calcPaceMin);
-    setPaceSec(calcPaceSec);
-    console.log(calcPaceHr + ":" + calcPaceMin + ":" + calcPaceSec);
+      if (hr === ""){
+        console.log(Number.isNaN(hr));
+        hr = 0;
+      }
+      if (min === "") {
+        min = 0;
+      }
+      if (sec === "") {
+        sec = 0;
+      }
+      console.log("input to calcPace: " + hr + ":" + min + ":" + sec);
+      var paceInSec = calcPace(hr, min, sec, dist, distUnit, paceUnit);
+      console.log(paceInSec);
+      //convert back to hh:mm:ss.xx
+      var calcPaceHr = Math.floor(paceInSec / 3600);
+      var calcPaceMin = Math.floor(paceInSec / 60 % 60);
+      var calcPaceSec = paceInSec - calcPaceHr * 3600 - calcPaceMin * 60;
+      setPaceHr(calcPaceHr);
+      setPaceMin(calcPaceMin);
+      setPaceSec(calcPaceSec);
+      console.log(calcPaceHr + ":" + calcPaceMin + ":" + calcPaceSec);
+    }
+  }
+
+  const handleDistClick = () => {
+    if (!validTime(timeHr, timeMin, timeSec) || !validTime(paceHr, paceMin, paceSec)) {
+      setDistErrDialogOpen(true);
+    }
   }
 
   const handleReset = () => {
@@ -148,7 +158,7 @@ function App() {
       <Grid item>
       <Grid container direction="row" alignItems="center">
         <Grid item>
-          <Button variant="outlined" onClick={() => setDialogOpen(true)}>Calculate Splits</Button>
+          <Button variant="outlined" onClick={() => setSplitsDialogOpen(true)}>Calculate Splits</Button>
         </Grid>
         <Grid item>
           <Button variant="outlined" onClick={handleReset}>Reset</Button>
@@ -157,12 +167,52 @@ function App() {
       </Grid>
       </Grid>
 
-      <Dialog open={dialogOpen} onClose={() => {setDialogOpen(false)}} >
+      <Dialog open={paceErrDialogOpen} onClose={() => {setPaceErrDialogOpen(false)}} >
+            <DialogTitle>Error</DialogTitle>
+            <DialogContent>
+            <DialogContentText>
+                To calculate pace, you must input a valid time and distance.
+            </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button variant="outlined" onClick={() => setPaceErrDialogOpen(false)}>Close</Button>
+            </DialogActions>
+      </Dialog>
+
+      <Dialog open={distErrDialogOpen} onClose={() => {setDistErrDialogOpen(false)}} >
+            <DialogTitle>Error</DialogTitle>
+            <DialogContent>
+            <DialogContentText>
+                To calculate distance, you must input a valid time and pace.
+            </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button variant="outlined" onClick={() => setDistErrDialogOpen(false)}>Close</Button>
+            </DialogActions>
+      </Dialog>
+
+      <Dialog open={timeErrDialogOpen} onClose={() => {timeErrDialogOpen(false)}} >
+            <DialogTitle>Error</DialogTitle>
+            <DialogContent>
+            <DialogContentText>
+                To calculate time, you must input a valid distance and pace.
+            </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button variant="outlined" onClick={() => setTimeErrDialogOpen(false)}>Close</Button>
+            </DialogActions>
+      </Dialog>
+
+      <Dialog open={splitsDialogOpen} onClose={() => {setSplitsDialogOpen(false)}} >
             <DialogTitle>Splits</DialogTitle>
+            <DialogContent>
             <DialogContentText>
                 yo this do be a test doe
             </DialogContentText>
-            <Button variant="outlined" onClick={() => setDialogOpen(false)}>Close</Button>
+            </DialogContent>
+            <DialogActions>
+              <Button variant="outlined" onClick={() => setSplitsDialogOpen(false)}>Close</Button>
+            </DialogActions>
       </Dialog>
    </Container>
   );
