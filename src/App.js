@@ -75,21 +75,26 @@ function App() {
     setPaceUnit(unit);
   }
 
-  const calcAndSetPace = () => {
-    var hr = timeHr;
-    var min = timeMin;
-    var sec = timeSec;
+  const makeTimeNums = (hr, min, sec) => {
+    var hrNum = hr;
+    var minNum = min;
+    var secNum = sec;
 
-    if (hr === ""){
-      hr = 0;
-    }
-    if (min === "") {
-      min = 0;
-    }
-    if (sec === "") {
-      sec = 0;
-    }
-    var paceInfo = calcPace(hr, min, sec, dist, distUnit, paceUnit);
+    if (hrNum === "") hrNum = 0;
+    if (minNum === "") minNum = 0;
+    if (secNum === "") secNum = 0;
+
+    return {
+      hr: hrNum,
+      min: minNum,
+      sec: secNum
+    };
+  }
+
+  const calcAndSetPace = () => {
+    var timeNums = makeTimeNums(timeHr, timeMin, timeSec);
+
+    var paceInfo = calcPace(timeNums.hr, timeNums.min, timeNums.sec, dist, distUnit, paceUnit);
     setPaceHr(paceInfo.hr);
     setPaceMin(paceInfo.min);
     setPaceSec(paceInfo.sec);
@@ -110,39 +115,21 @@ function App() {
     if (!validTime(timeHr, timeMin, timeSec) || !validTime(paceHr, paceMin, paceSec)) {
       setDistErrDialogOpen(true);
     } else {
-      var hr = timeHr;
-      var min = timeMin;
-      var sec = timeSec;
-      var pHr = paceHr;
-      var pMin = paceMin;
-      var pSec = paceSec;
+      var timeNums = makeTimeNums(timeHr, timeMin, timeSec);
+      var paceNums = makeTimeNums(paceHr, paceMin, paceSec);
 
-      if (hr === "") hr = 0;
-      if (min === "") min = 0;
-      if (sec === "") sec = 0;
-      if (pHr === "") pHr = 0;
-      if (pMin === "") pMin = 0;
-      if (pSec === "") pSec = 0;
-      var result = calcDist(hr, min, sec, distUnit, pHr, pMin, pSec, paceUnit);
+      var result = calcDist(timeNums.hr, timeNums.min, timeNums.sec, distUnit, paceNums.hr, paceNums.min, paceNums.sec, paceUnit);
       setDist(result);
     }
   }
 
-  //need to fix, this is just copied from the handlePace
   const handleTimeClick = () => {
     //should prob do a check to make sure there's actually numbers entered in the time and dist fields
     if (!validTime(paceHr, paceMin, paceSec) || !validDist(dist)) {
       setTimeErrDialogOpen(true);
     } else {
-      var hr = paceHr;
-      var min = paceMin;
-      var sec = paceSec;
-
-      if (hr === "") hr = 0;
-      if (min === "") min = 0;
-      if (sec === "") sec = 0;
-      
-      var result = calcTime(dist, distUnit, hr, min, sec, paceUnit);
+      var paceNums = makeTimeNums(paceHr, paceMin, paceSec);      
+      var result = calcTime(dist, distUnit, paceNums.hr, paceNums.min, paceNums.sec, paceUnit);
       setTimeHr(result.hr);
       setTimeMin(result.min);
       setTimeSec(result.sec);
@@ -151,12 +138,32 @@ function App() {
 
   const handleSplitsClick = () => {
     //need to check if there's enough info entered to actually calculate the splits
-    if ((!validTime(timeHr, timeMin, timeSec) || !validDist(dist)) && (!validTime(timeHr, timeMin, timeSec) || !validTime(paceHr, paceMin, paceSec))) { 
-      setSplitsErrDialogOpen(true);
+    //given that the time is valid, make sure the distance is also valid.
+    var paceInfo;
+    if (validTime(timeHr, timeMin, timeSec)) {
+      if (validDist(dist)) {
+        paceInfo = calcAndSetPace();
+        setSplitsVec(calcSplits(paceInfo.inSec, paceUnit, dist, distUnit));
+        setSplitsDialogOpen(true);
+      } else {
+        setSplitsErrDialogOpen(true);
+      }
+    //given that the pace is valid, check that the distance is valid.
+    } else if (validTime(paceHr, paceMin, paceSec)) {
+      if (validDist(dist)) {
+        var paceNums = makeTimeNums(paceHr, paceMin, paceSec); 
+        var timeInfo = calcTime(dist, distUnit, paceNums.hr, paceNums.min, paceNums.sec, paceUnit);
+        setTimeHr(timeInfo.hr);
+        setTimeMin(timeInfo.min);
+        setTimeSec(timeInfo.sec);
+        paceInfo = calcPace(timeInfo.hr, timeInfo.min, timeInfo.sec, dist, distUnit, paceUnit);
+        setSplitsVec(calcSplits(paceInfo.inSec, paceUnit, dist, distUnit));
+        setSplitsDialogOpen(true);
+      } else {
+        setSplitsErrDialogOpen(true);
+      }
     } else {
-      var paceInfo = calcAndSetPace();
-      setSplitsVec(calcSplits(paceInfo.inSec, paceUnit, dist, distUnit));
-      setSplitsDialogOpen(true);
+      setSplitsErrDialogOpen(true);
     }
   }
 

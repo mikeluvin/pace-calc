@@ -119,9 +119,6 @@ function calcTime(dist, distUnit, paceHr, paceMin, paceSec, paceUnit) {
 }
 
  //return an array with each split so we can iterate over it
- // **
- // i need to add the functionality to calculate the splits based on distance and pace
- // **
 function calcSplits(paceInSec, paceUnit, dist, distUnit) {
     console.log(paceUnit + "&" + distUnit);
     var paceUnitNum;
