@@ -44,7 +44,7 @@ function convDistToPaceUnit(distUnit, paceUnit) {
         } else if (paceUnit === "400m") {
             multiplier = 1 / 1000 * 2.5;
         } else if (paceUnit === "800m") {
-            multiplier = 1/1000 * 1.25;
+            multiplier = 1 / 1000 * 1.25;
         } else if (paceUnit === "mile") {
             multiplier = 1 / 1000 / KM_PER_MI;
         }
@@ -73,7 +73,7 @@ function calcPace(timeHr, timeMin, timeSec, dist, distUnit, paceUnit) {
     console.log(dist + " " + distUnit + ' pace unit:' + paceUnit);
 
     //first, convert the time to seconds
-    var timeInSec = timeHr * 3600 + timeMin * 60 + parseFloat(timeSec);
+    var timeInSec = parseInt(timeHr) * 3600 + (timeMin) * 60 + parseFloat(timeSec);
     //cases depending on the dist unit and the pace unit
 
     var distInPaceUnit = dist * convDistToPaceUnit(distUnit, paceUnit);
@@ -92,14 +92,34 @@ function calcPace(timeHr, timeMin, timeSec, dist, distUnit, paceUnit) {
 }
 
 function calcDist(timeHr, timeMin, timeSec, distUnit, paceHr, paceMin, paceSec, paceUnit) {
-    convDistToPaceUnit(distUnit, paceUnit)
+    var multiplier = convDistToPaceUnit(distUnit, paceUnit);
+    var timeInSec = parseInt(timeHr) * 3600 + parseInt(timeMin) * 60 + parseFloat(timeSec);
+    var paceInSec = parseInt(paceHr) * 3600 + parseInt(paceMin) * 60 + parseFloat(paceSec);
+    console.log("time: " + timeInSec + " pace: " + paceInSec);
+    console.log("multiplier: " + multiplier);
+    var dist = timeInSec / paceInSec / multiplier;
+    return dist;
 }
 
-function calcTime(args) {
-
+//returns the time in an object containing the time in seconds, and each
+//of the hour, min, sec separately
+function calcTime(dist, distUnit, paceHr, paceMin, paceSec, paceUnit) {
+    var paceInSec = parseInt(paceHr) * 3600 + parseInt(paceMin) * 60 + parseFloat(paceSec);
+    var distInPaceUnit = dist * convDistToPaceUnit(distUnit, paceUnit);
+    var timeInSec = paceInSec * distInPaceUnit;
+    var calcTimeHr = Math.floor(timeInSec / 3600);
+    var calcTimeMin = Math.floor(timeInSec / 60 % 60);
+    var calcTimeSec = timeInSec - calcTimeHr * 3600 - calcTimeMin * 60;
+    return {
+        inSec: timeInSec,
+        hr: calcTimeHr,
+        min: calcTimeMin,
+        sec: calcTimeSec
+    }
 }
 
  //return an array with each split so we can iterate over it
+ // **
  // i need to add the functionality to calculate the splits based on distance and pace
  // **
 function calcSplits(paceInSec, paceUnit, dist, distUnit) {
@@ -113,8 +133,9 @@ function calcSplits(paceInSec, paceUnit, dist, distUnit) {
     }
 
     var unit;
+    //if i add yards as a pace option, will need to add another case
     if (paceUnit.endsWith('0m')) {
-        unit = 'm'
+        unit = 'm';
     } else {
         unit = paceUnit; //will change when i add more options
     }

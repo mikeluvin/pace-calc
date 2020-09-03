@@ -110,7 +110,20 @@ function App() {
     if (!validTime(timeHr, timeMin, timeSec) || !validTime(paceHr, paceMin, paceSec)) {
       setDistErrDialogOpen(true);
     } else {
-      var result = calcDist()
+      var hr = timeHr;
+      var min = timeMin;
+      var sec = timeSec;
+      var pHr = paceHr;
+      var pMin = paceMin;
+      var pSec = paceSec;
+
+      if (hr === "") hr = 0;
+      if (min === "") min = 0;
+      if (sec === "") sec = 0;
+      if (pHr === "") pHr = 0;
+      if (pMin === "") pMin = 0;
+      if (pSec === "") pSec = 0;
+      var result = calcDist(hr, min, sec, distUnit, pHr, pMin, pSec, paceUnit);
       setDist(result);
     }
   }
@@ -118,33 +131,21 @@ function App() {
   //need to fix, this is just copied from the handlePace
   const handleTimeClick = () => {
     //should prob do a check to make sure there's actually numbers entered in the time and dist fields
-    if (!validTime(timeHr, timeMin, timeSec) || !validDist(dist)) {
+    if (!validTime(paceHr, paceMin, paceSec) || !validDist(dist)) {
       setTimeErrDialogOpen(true);
     } else {
-      var hr = timeHr;
-      var min = timeMin;
-      var sec = timeSec;
+      var hr = paceHr;
+      var min = paceMin;
+      var sec = paceSec;
 
-      if (hr === ""){
-        hr = 0;
-      }
-      if (min === "") {
-        min = 0;
-      }
-      if (sec === "") {
-        sec = 0;
-      }
-      console.log("input to calcPace: " + hr + ":" + min + ":" + sec);
-      var paceInSec = calcPace(hr, min, sec, dist, distUnit, paceUnit);
-      console.log(paceInSec);
-      //convert back to hh:mm:ss.xx
-      var calcPaceHr = Math.floor(paceInSec / 3600);
-      var calcPaceMin = Math.floor(paceInSec / 60 % 60);
-      var calcPaceSec = paceInSec - calcPaceHr * 3600 - calcPaceMin * 60;
-      setPaceHr(calcPaceHr);
-      setPaceMin(calcPaceMin);
-      setPaceSec(calcPaceSec);
-      console.log(calcPaceHr + ":" + calcPaceMin + ":" + calcPaceSec);
+      if (hr === "") hr = 0;
+      if (min === "") min = 0;
+      if (sec === "") sec = 0;
+      
+      var result = calcTime(dist, distUnit, hr, min, sec, paceUnit);
+      setTimeHr(result.hr);
+      setTimeMin(result.min);
+      setTimeSec(result.sec);
     }
   }
 
