@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Container, TextField, Grid, InputLabel, MenuItem, Select, makeStyles, FormHelperText, FormControl } from '@material-ui/core';
 
 
@@ -77,7 +77,9 @@ export default function Pace(props) {
                             >
                                 <MenuItem value={"mile"}>mile</MenuItem>
                                 <MenuItem value={"km"}>km</MenuItem>
-                                <MenuItem value={"400"}>400m</MenuItem>
+                                <MenuItem value={"800m"}>800 m</MenuItem>
+                                <MenuItem value={"400m"}>400 m</MenuItem>
+                                <MenuItem value={"200m"}>200 m</MenuItem>
                             </Select>
                             </FormControl>
                     </Grid>

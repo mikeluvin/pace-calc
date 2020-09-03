@@ -34,6 +34,7 @@ function App() {
   const [distErrDialogOpen, setDistErrDialogOpen] = useState(false);
   const [timeErrDialogOpen, setTimeErrDialogOpen] = useState(false);
   const [splitsDialogOpen, setSplitsDialogOpen] = useState(false);
+  const [splitsErrDialogOpen, setSplitsErrDialogOpen] = useState(false);
   const [splitsVec, setSplitsVec] = useState([]);
 
   //this is going to get very cumbersome...but maybe still better than just putting the
@@ -148,11 +149,14 @@ function App() {
   }
 
   const handleSplitsClick = () => {
-    //**need to check if there's enough info entered to actually calculate the splits
-    //will do that later
-    var paceInfo = calcAndSetPace();
-    setSplitsVec(calcSplits(paceInfo.inSec, paceUnit, dist, distUnit));
-    setSplitsDialogOpen(true);
+    //need to check if there's enough info entered to actually calculate the splits
+    if ((!validTime(timeHr, timeMin, timeSec) || !validDist(dist)) && (!validTime(timeHr, timeMin, timeSec) || !validTime(paceHr, paceMin, paceSec))) { 
+      setSplitsErrDialogOpen(true);
+    } else {
+      var paceInfo = calcAndSetPace();
+      setSplitsVec(calcSplits(paceInfo.inSec, paceUnit, dist, distUnit));
+      setSplitsDialogOpen(true);
+    }
   }
 
   const handleReset = () => {
@@ -251,6 +255,18 @@ function App() {
             </DialogActions>
       </Dialog>
 
+      <Dialog open={splitsErrDialogOpen} onClose={() => {setSplitsErrDialogOpen(false)}} >
+            <DialogTitle>Oops!</DialogTitle>
+            <DialogContent>
+            <DialogContentText>
+                To calculate splits, you must input a valid time and distance, or a valid time and pace.
+            </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button variant="outlined" onClick={() => setSplitsErrDialogOpen(false)}>Close</Button>
+            </DialogActions>
+      </Dialog>
+
       <Dialog open={splitsDialogOpen} onClose={() => {setSplitsDialogOpen(false)}} >
             <DialogTitle>Splits</DialogTitle>
             <DialogContent>
@@ -260,7 +276,6 @@ function App() {
                     <TableRow>
                       <TableCell align="right">Split #</TableCell>
                       <TableCell align="right">Distance</TableCell>
-                      <TableCell align="right">Pace Unit</TableCell>
                       <TableCell align="right">Times</TableCell>
                     </TableRow>
                   </TableHead>
@@ -268,10 +283,9 @@ function App() {
                   {splitsVec.map((row, i) => (
                     <TableRow key={i + 1}>
                       <TableCell component="th" scope="row">
-                        {i + 1}
+                        {row.splitNum}
                       </TableCell>
                       <TableCell align="right">{row.dist}</TableCell>
-                      <TableCell align="right">{row.unit}</TableCell>
                       <TableCell align="right">{row.splitTime}</TableCell>
                     </TableRow>
                   ))}

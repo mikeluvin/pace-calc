@@ -1,6 +1,72 @@
 const KM_PER_MI = 1.609344;
 const YARDS_PER_MI = 1760;
 
+//returns a multiplier to convert the distance unit to the pace unit 
+function convDistToPaceUnit(distUnit, paceUnit) {
+    var multiplier;
+    
+    if (distUnit === "miles") {
+        if (paceUnit === "km") {
+            //convert the dist to km
+            multiplier = KM_PER_MI;
+        } else if (paceUnit === "200m") {
+            multiplier = KM_PER_MI * 5;
+        } else if (paceUnit === "400m") {
+            multiplier = KM_PER_MI * 2.5;
+        } else if (paceUnit === "800m") {
+            multiplier = KM_PER_MI * 1.25;
+        } else {
+            //do nothing
+            multiplier = 1;
+        }
+    }
+    // km 
+    else if (distUnit === "km") {
+        if (paceUnit === "mile") {
+            multiplier = 1 / KM_PER_MI;
+        } else if (paceUnit === "200m") {
+            multiplier = 5;
+        } else if (paceUnit === "400m") {
+            multiplier = 2.5;
+        } else if (paceUnit === "800m") {
+            multiplier = 1.25;
+        } else {
+            multiplier = 1;
+        }
+    }
+    //meters 
+    else if (distUnit === "meters") {
+        if (paceUnit === "km") {
+            //convert the dist to km
+            multiplier = 1 / 1000;
+        } else if (paceUnit === "200m") {
+            multiplier = 1 / 1000 * 5;
+        } else if (paceUnit === "400m") {
+            multiplier = 1 / 1000 * 2.5;
+        } else if (paceUnit === "800m") {
+            multiplier = 1/1000 * 1.25;
+        } else if (paceUnit === "mile") {
+            multiplier = 1 / 1000 / KM_PER_MI;
+        }
+    } 
+    //yards 
+    else if (distUnit === "yards") {
+        if (paceUnit === "mile") {
+            multiplier = 1 / YARDS_PER_MI;
+        } else if (paceUnit === "200m") {
+            multiplier = 1 / YARDS_PER_MI * KM_PER_MI * 5;
+        } else if (paceUnit === "400m") {
+            multiplier = 1 / YARDS_PER_MI * KM_PER_MI * 2.5;
+        } else if (paceUnit === "800m") {
+            multiplier = 1 / YARDS_PER_MI * KM_PER_MI * 1.25;
+        } else if (paceUnit === "km") {
+            multiplier = 1 / YARDS_PER_MI * KM_PER_MI ;
+        }
+    }
+
+    return multiplier;
+}
+
 //calculates the pace and returns it in seconds per paceUnit
 function calcPace(timeHr, timeMin, timeSec, dist, distUnit, paceUnit) {
     console.log(timeHr + ":" + timeMin + ":" + timeSec);
@@ -10,51 +76,7 @@ function calcPace(timeHr, timeMin, timeSec, dist, distUnit, paceUnit) {
     var timeInSec = timeHr * 3600 + timeMin * 60 + parseFloat(timeSec);
     //cases depending on the dist unit and the pace unit
 
-    var distInPaceUnit;
-
-    //all cases where the distance is in miles
-    if (distUnit === "miles") {
-        if (paceUnit === "km") {
-            //convert the dist to km
-            distInPaceUnit = dist * KM_PER_MI;
-        } else if (paceUnit === "400") {
-            distInPaceUnit = dist * KM_PER_MI * 2.5;
-        } else {
-            //do nothing
-            distInPaceUnit = dist;
-        }
-    }
-    // km 
-    else if (distUnit === "km") {
-        if (paceUnit === "mile") {
-            distInPaceUnit = dist / KM_PER_MI;
-        } else if (paceUnit === "400") {
-            distInPaceUnit = dist * 2.5;
-        } else {
-            distInPaceUnit = dist;
-        }
-    }
-    //meters 
-    else if (distUnit === "meters") {
-        if (paceUnit === "km") {
-            //convert the dist to km
-            distInPaceUnit = dist / 1000;
-        } else if (paceUnit === "400") {
-            distInPaceUnit = dist / 1000 * 2.5;
-        } else if (paceUnit === "mile") {
-            distInPaceUnit = dist / 1000 / KM_PER_MI;
-        }
-    } 
-    //yards 
-    else if (distUnit === "yards") {
-        if (paceUnit === "mile") {
-            distInPaceUnit = dist / YARDS_PER_MI;
-        } else if (paceUnit === "400") {
-            distInPaceUnit = dist / YARDS_PER_MI * KM_PER_MI * 2.5;
-        } else if (paceUnit === "km") {
-            distInPaceUnit = dist / YARDS_PER_MI * KM_PER_MI ;
-        }
-    }
+    var distInPaceUnit = dist * convDistToPaceUnit(distUnit, paceUnit);
 
     //ultimately, this is the final calculation
     var paceInSec = timeInSec/distInPaceUnit;
@@ -69,8 +91,8 @@ function calcPace(timeHr, timeMin, timeSec, dist, distUnit, paceUnit) {
     }
 }
 
-function calcDist(args) {
-
+function calcDist(timeHr, timeMin, timeSec, distUnit, paceHr, paceMin, paceSec, paceUnit) {
+    convDistToPaceUnit(distUnit, paceUnit)
 }
 
 function calcTime(args) {
@@ -78,28 +100,55 @@ function calcTime(args) {
 }
 
  //return an array with each split so we can iterate over it
+ // i need to add the functionality to calculate the splits based on distance and pace
+ // **
 function calcSplits(paceInSec, paceUnit, dist, distUnit) {
-    //**just realized that I need to consider the relationship bw the distUnit and paceUnit
-    //may just make a helper function that does all the conversions so i can use it in other functions
-
     console.log(paceUnit + "&" + distUnit);
     var paceUnitNum;
-    var distInPaceUnit;
-    if (paceUnit == "mile") {
+    var distInPaceUnit = dist * convDistToPaceUnit(distUnit, paceUnit);
+    if (paceUnit === "mile" || paceUnit === "km") {
         paceUnitNum = 1;
-        distInPaceUnit = dist;
-    } else if (paceUnit == "400" && distUnit == "miles") {
-        console.log("hi");
-        paceUnitNum = 400;
-        distInPaceUnit = dist * 1609.344 / 2.5;
+    } else if (paceUnit.endsWith("0m")) {
+        paceUnitNum = parseInt(paceUnit.slice(0, 3));
     }
-    var accum_dist = paceUnitNum; //first split is just the pace/unit
-    var num_splits = Math.ceil(distInPaceUnit / paceUnitNum);
+
+    var unit;
+    if (paceUnit.endsWith('0m')) {
+        unit = 'm'
+    } else {
+        unit = paceUnit; //will change when i add more options
+    }
+
+    var accum_dist; //the cumulative distance in the for loop
+    console.log("distance in pace unit: " + distInPaceUnit);
+    console.log(paceUnitNum);
+    var num_splits = Math.ceil(distInPaceUnit);
+    var splitNum; //the current split # in the for loop
     console.log("splits: " + num_splits);
     var split_info = new Array(num_splits);
+
     for (let i = 0 ; i < num_splits; i++) {
         //****need to convert the pace to a string hh:mm:ss.xx
-        var splitInSec = paceInSec * accum_dist;
+
+        if (i === 0) {
+            accum_dist = paceUnitNum; //first split is just the pace/unit
+            splitNum = i + 1;
+        } else if (i + 1 === num_splits) {
+            splitNum = distInPaceUnit;
+            accum_dist = distInPaceUnit * paceUnitNum;
+            //if setting to 4 decimals results in a diff #, then we need to truncate
+            if (Math.abs(splitNum.toFixed(4) - splitNum) > Number.EPSILON) {
+                splitNum = splitNum.toFixed(4);
+            }
+            if (Math.abs(accum_dist.toFixed(4) - accum_dist) > Number.EPSILON) {
+                accum_dist = accum_dist.toFixed(4);
+            }
+        } else {
+            splitNum = i + 1;
+            accum_dist += paceUnitNum;
+        }
+        var splitInSec;
+        splitInSec = paceInSec * accum_dist / paceUnitNum;
         var calcPaceHr = Math.floor(splitInSec / 3600);
         var calcPaceMin = Math.floor(splitInSec / 60 % 60);
         var calcPaceSec = splitInSec - calcPaceHr * 3600 - calcPaceMin * 60;
@@ -111,14 +160,11 @@ function calcSplits(paceInSec, paceUnit, dist, distUnit) {
             hrStr = String(calcPaceHr).padStart(2, '0') + ":";
         }
         split_info[i] = {
-            dist: accum_dist,
-            unit: paceUnit,
+            splitNum: splitNum,
+            dist: accum_dist + " " + unit,
             splitTime: hrStr + String(calcPaceMin).padStart(2, '0') + ":" + calcPaceSec.toFixed(2).padStart(5, '0')
         }
-        accum_dist += paceUnitNum;
-        if (accum_dist > dist) {
-            accum_dist = dist;
-        }
+
     }
     console.log(split_info);
     return split_info;
