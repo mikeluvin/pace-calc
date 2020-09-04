@@ -1,11 +1,11 @@
 import React from 'react';
 import { Container, TextField, Grid, InputLabel, MenuItem, Select, makeStyles, FormHelperText, FormControl } from '@material-ui/core';
-
+import './App.css';
 
 const useStyles = makeStyles((theme) => ({
     formControl: {
       margin: theme.spacing(1),
-      minWidth: 120,
+      minWidth: 75,
     },
     selectEmpty: {
       marginTop: theme.spacing(2),
@@ -25,7 +25,7 @@ export default function Distance(props) {
             <Grid>
                 <Grid className="main" container direction="row">
                     <Grid item>
-                        <TextField id="dist" label="distance" type="number" min="0" variant="outlined"
+                        <TextField id="dist" label="dist" type="number" min="0" variant="outlined"
                             onChange={(event) => {
                                 var value = event.target.value;
                                 console.log(value);

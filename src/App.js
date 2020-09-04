@@ -5,7 +5,7 @@ import Pace from './Pace';
 import { calcPace, calcDist, calcTime, calcSplits, validTime, validDist,  } from "./calculations";
 import { Container, Grid, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions,
   Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
+import { StylesProvider } from "@material-ui/core/styles";
 import './App.css';
 
 
@@ -180,45 +180,73 @@ function App() {
   }
 
   return (
+    <StylesProvider>
     <Container className="App">
-      <Grid container direction="column" spacing={5} justify-content="space-evenly" alignItems="center">
+      <Grid container direction="column" spacing={2} justify-content="space-evenly" alignItems="center">
       <Grid item>
         <h1>Pace Calculator</h1>
       </Grid>
       <Grid item>
-      <Grid container direction="row" alignItems="center">
-        <Grid item>
-          <Time hr={timeHr} min={timeMin} sec={timeSec} onHrChange={timeHrHandler} onMinChange={timeMinHandler} onSecChange={timeSecHandler}/>
-        </Grid>
-        <Grid item>
-          <Button variant="outlined" onClick={handleTimeClick}>Calculate Time</Button>
-        </Grid>
+        <TableContainer className="homeTablePaper" component={Paper}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell className="homeTableHead" align="left">Time</TableCell>
+                <TableCell align="right">
+                  <Button variant="outlined" onClick={handleTimeClick}>Calculate</Button>
+                </TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              <TableCell align="left" colspan={2}>
+                <Time hr={timeHr} min={timeMin} sec={timeSec} onHrChange={timeHrHandler} onMinChange={timeMinHandler} onSecChange={timeSecHandler}/>
+              </TableCell>
+            </TableBody>
+          </Table>
+        </TableContainer>
       </Grid>
+      <Grid item>
+      <TableContainer className="homeTablePaper" component={Paper}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell className="homeTableHead" align="left">Distance</TableCell>
+                <TableCell align="right">
+                  <Button variant="outlined" onClick={handleDistClick}>Calculate</Button>
+                </TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              <TableCell align="left" colSpan={2}>
+                  <Distance dist={dist} unit={distUnit} onDistChange={distHandler} onUnitChange={distUnitHandler}/>
+              </TableCell>
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Grid>
+      <Grid item>
+      <TableContainer className="homeTablePaper" component={Paper}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell className="homeTableHead" align="left">Pace</TableCell>
+                <TableCell align="right">
+                  <Button variant="outlined" onClick={handlePaceClick}>Calculate</Button>
+                </TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              <TableCell align="left" colspan={2}>
+                <Pace hr={paceHr} min={paceMin} sec={paceSec} unit={paceUnit} onHrChange={paceHrHandler} onMinChange={paceMinHandler} onSecChange={paceSecHandler} onUnitChange={paceUnitHandler}/>
+              </TableCell>
+            </TableBody>
+          </Table>
+        </TableContainer>
       </Grid>
       <Grid item>
       <Grid container direction="row" alignItems="center">
         <Grid item>
-          <Distance dist={dist} unit={distUnit} onDistChange={distHandler} onUnitChange={distUnitHandler}/>
-        </Grid>
-        <Grid item>
-          <Button variant="outlined" onClick={handleDistClick}>Calculate Distance</Button>
-        </Grid>
-      </Grid>
-      </Grid>
-      <Grid item>
-      <Grid container direction="row" alignItems="center">
-        <Grid item>
-          <Pace hr={paceHr} min={paceMin} sec={paceSec} unit={paceUnit} onHrChange={paceHrHandler} onMinChange={paceMinHandler} onSecChange={paceSecHandler} onUnitChange={paceUnitHandler}/>
-        </Grid>
-        <Grid item>
-          <Button variant="outlined" onClick={handlePaceClick}>Calculate Pace</Button>
-        </Grid>
-      </Grid>
-      </Grid>
-      <Grid item>
-      <Grid container direction="row" alignItems="center">
-        <Grid item>
-          <Button variant="outlined" onClick={handleSplitsClick}>Calculate Splits</Button>
+          <Button variant="outlined" onClick={handleSplitsClick}>Show Splits</Button>
         </Grid>
         <Grid item>
           <Button variant="outlined" onClick={handleReset}>Reset</Button>
@@ -251,7 +279,7 @@ function App() {
             </DialogActions>
       </Dialog>
 
-      <Dialog open={timeErrDialogOpen} onClose={() => {timeErrDialogOpen(false)}} >
+      <Dialog open={timeErrDialogOpen} onClose={() => {setTimeErrDialogOpen(false)}} >
             <DialogTitle>Oops!</DialogTitle>
             <DialogContent>
             <DialogContentText>
@@ -306,6 +334,7 @@ function App() {
             </DialogActions>
       </Dialog>
    </Container>
+   </StylesProvider>
   );
 }
 

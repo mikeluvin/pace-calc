@@ -1,11 +1,11 @@
 import React from 'react';
 import { Container, TextField, Grid, InputLabel, MenuItem, Select, makeStyles, FormHelperText, FormControl } from '@material-ui/core';
-
+import './App.css';
 
 const useStyles = makeStyles((theme) => ({
     formControl: {
       margin: theme.spacing(1),
-      minWidth: 120,
+      minWidth: 70,
     },
     selectEmpty: {
       marginTop: theme.spacing(2),
@@ -21,9 +21,9 @@ export default function Pace(props) {
     return (
         <Container>
             <Grid>
-                <Grid className="main" container direction="row">
+                <Grid className="main" container direction="row" alignItems="center">
                     <Grid item>
-                        <TextField id="hours" label="hrs" type="number" min="0" variant="outlined"
+                        <TextField id="hr" label="hr" type="number" min="0" variant="outlined"
                             onChange={(event) => {
                                 var value = event.target.value;
                                 console.log(value);
@@ -33,8 +33,9 @@ export default function Pace(props) {
                             value={hr}
                             error={hr < 0}   /> 
                     </Grid>
+                    <h2>:</h2>
                     <Grid item>
-                        <TextField id="mins" label="mins" type="number" min="0" max="60" step="1" variant="outlined"
+                        <TextField id="min" label="min" type="number" min="0" max="60" step="1" variant="outlined"
                             onChange={(event) => {
                                 var value = event.target.value;
                                 console.log(value);
@@ -45,9 +46,10 @@ export default function Pace(props) {
                             value={min}  
                             error={min < 0 || min > 60}  /> 
                     </Grid>
+                    <h2>:</h2>
                     <Grid item>
                         {/*need to have a diff styling for when the input is invalid*/}
-                        <TextField id="secs" label="secs" type="number" min="0" max="60" variant="outlined"
+                        <TextField id="sec" label="sec" type="number" min="0" max="60" variant="outlined"
                             onChange={(event) => {
                                 var value = event.target.value;
                                 console.log(value);

@@ -7,6 +7,72 @@
   pointer-events: none;
 }
 
+/*need to make mobile friendly */
+
+#root {
+  background-attachment: fixed;
+  background-color: #9effd2;
+  background-size: cover;
+  height: 100vh;
+  background-position: center;
+  width: 100vw;
+}
+
+h1 {
+  font-size: 6vw;
+  color: black;
+  font-family: Tahoma, Geneva, sans-serif;
+}
+
+.homeTablePaper {
+  min-width: 85vw;
+}
+
+.homeTableHead {
+  font-family: Tahoma, Geneva, sans-serif;
+  font-size: 4.8vw !important;
+  font-weight: bold !important;
+}
+
+.MuiTextField-root {
+  max-width: 14vw;
+  background-color: white;
+}
+
+.MuiButton-root {
+  background-color: white !important;
+  font-size: 3.5vw !important;
+}
+
+/*
+.MuiSelect-root {
+  max-width: 12vw;
+}
+
+.MuiSelect-icon {
+  max-width: 14vw;
+}
+*/
+
+@media screen and (min-width: 800px){
+  h1 {
+    font-size: 36px;
+  }
+  .homeTablePaper {
+    min-width: 580px;
+    max-width: 580px;
+  }
+  .homeTableHead {
+    font-size: 20px !important;
+  }
+  .MuiTextField-root {
+    max-width: 100px;
+  }
+  .MuiButton-root {
+    font-size: 13px !important;
+  }
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
@@ -23,6 +89,8 @@
   font-size: calc(10px + 2vmin);
   color: white;
 }
+
+
 
 .App-link {
   color: #61dafb;
