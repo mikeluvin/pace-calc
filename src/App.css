@@ -11,37 +11,41 @@
 
 #root {
   background-attachment: fixed;
-  background-color: #9effd2;
+   /* background-color: 	silver; */
   background-size: cover;
   height: 100vh;
   background-position: center;
   width: 100vw;
 }
 
-h1 {
-  font-size: 6vw;
-  color: black;
+.MuiAppBar-root {
+  background: #4E2A84 !important;
+}
+
+.title {
+  font-size: 7vmin !important;
+  color: White;
   font-family: Tahoma, Geneva, sans-serif;
 }
 
 .homeTablePaper {
-  min-width: 85vw;
+  min-width: 82.5vmin;
 }
 
 .homeTableHead {
   font-family: Tahoma, Geneva, sans-serif;
-  font-size: 4.8vw !important;
+  font-size: 4.8vmin !important;
   font-weight: bold !important;
 }
 
 .MuiTextField-root {
-  max-width: 14vw;
+  max-width: 13vmin;
   background-color: white;
 }
 
 .MuiButton-root {
-  background-color: white !important;
-  font-size: 3.5vw !important;
+  background-color:#4E2A84  !important;
+  font-size: 3.5vmin !important;
 }
 
 /*
@@ -55,8 +59,21 @@ h1 {
 */
 
 @media screen and (min-width: 800px){
-  h1 {
-    font-size: 36px;
+  /*
+  #root {
+    background-attachment: fixed;
+    background-color: silver;
+    background-size: cover; 
+    background-position: center;
+    height: 100vh;
+    width: 60vw;
+  } */
+  /*
+  .MuiAppBar-root {
+    max-width: 700px;
+  } */
+  .title {
+    font-size: 36px !important;
   }
   .homeTablePaper {
     min-width: 580px;

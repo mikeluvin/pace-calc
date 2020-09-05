@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import Time from './Time';
 import Distance from './Distance';
 import Pace from './Pace';
+import Layout from './Layout';
 import { calcPace, calcDist, calcTime, calcSplits, validTime, validDist,  } from "./calculations";
 import { Container, Grid, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions,
   Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@material-ui/core";
@@ -181,19 +182,17 @@ function App() {
 
   return (
     <StylesProvider>
+      <Layout className="title">
     <Container className="App">
       <Grid container direction="column" spacing={2} justify-content="space-evenly" alignItems="center">
-      <Grid item>
-        <h1>Pace Calculator</h1>
-      </Grid>
-      <Grid item>
+      <Grid item >
         <TableContainer className="homeTablePaper" component={Paper}>
           <Table>
             <TableHead>
               <TableRow>
                 <TableCell className="homeTableHead" align="left">Time</TableCell>
                 <TableCell align="right">
-                  <Button variant="outlined" onClick={handleTimeClick}>Calculate</Button>
+                  <Button variant="contained" color="primary" onClick={handleTimeClick}>Calculate</Button>
                 </TableCell>
               </TableRow>
             </TableHead>
@@ -212,7 +211,7 @@ function App() {
               <TableRow>
                 <TableCell className="homeTableHead" align="left">Distance</TableCell>
                 <TableCell align="right">
-                  <Button variant="outlined" onClick={handleDistClick}>Calculate</Button>
+                  <Button variant="contained" color="primary" onClick={handleDistClick}>Calculate</Button>
                 </TableCell>
               </TableRow>
             </TableHead>
@@ -231,7 +230,7 @@ function App() {
               <TableRow>
                 <TableCell className="homeTableHead" align="left">Pace</TableCell>
                 <TableCell align="right">
-                  <Button variant="outlined" onClick={handlePaceClick}>Calculate</Button>
+                  <Button variant="contained" color="primary" onClick={handlePaceClick}>Calculate</Button>
                 </TableCell>
               </TableRow>
             </TableHead>
@@ -244,12 +243,12 @@ function App() {
         </TableContainer>
       </Grid>
       <Grid item>
-      <Grid container direction="row" alignItems="center">
+      <Grid container direction="row" alignItems="center" spacing={1}>
         <Grid item>
-          <Button variant="outlined" onClick={handleSplitsClick}>Show Splits</Button>
+          <Button variant="contained" color="primary" onClick={handleSplitsClick}>Show Splits</Button>
         </Grid>
         <Grid item>
-          <Button variant="outlined" onClick={handleReset}>Reset</Button>
+          <Button variant="contained" color="primary" onClick={handleReset}>Reset</Button>
       </Grid>
       </Grid>
       </Grid>
@@ -334,6 +333,7 @@ function App() {
             </DialogActions>
       </Dialog>
    </Container>
+   </Layout>
    </StylesProvider>
   );
 }
