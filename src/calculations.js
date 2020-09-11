@@ -69,9 +69,6 @@ function convDistToPaceUnit(distUnit, paceUnit) {
 
 //calculates the pace and returns it in seconds per paceUnit
 function calcPace(timeHr, timeMin, timeSec, dist, distUnit, paceUnit) {
-    console.log(timeHr + ":" + timeMin + ":" + timeSec);
-    console.log(dist + " " + distUnit + ' pace unit:' + paceUnit);
-
     //first, convert the time to seconds
     var timeInSec = parseInt(timeHr) * 3600 + (timeMin) * 60 + parseFloat(timeSec);
     //cases depending on the dist unit and the pace unit
@@ -95,8 +92,6 @@ function calcDist(timeHr, timeMin, timeSec, distUnit, paceHr, paceMin, paceSec, 
     var multiplier = convDistToPaceUnit(distUnit, paceUnit);
     var timeInSec = parseInt(timeHr) * 3600 + parseInt(timeMin) * 60 + parseFloat(timeSec);
     var paceInSec = parseInt(paceHr) * 3600 + parseInt(paceMin) * 60 + parseFloat(paceSec);
-    console.log("time: " + timeInSec + " pace: " + paceInSec);
-    console.log("multiplier: " + multiplier);
     var dist = timeInSec / paceInSec / multiplier;
     return dist;
 }
@@ -120,7 +115,6 @@ function calcTime(dist, distUnit, paceHr, paceMin, paceSec, paceUnit) {
 
  //return an array with each split so we can iterate over it
 function calcSplits(paceInSec, paceUnit, dist, distUnit) {
-    console.log(paceUnit + "&" + distUnit);
     var paceUnitNum;
     var distInPaceUnit = dist * convDistToPaceUnit(distUnit, paceUnit);
     if (paceUnit === "mile" || paceUnit === "km") {
@@ -138,8 +132,6 @@ function calcSplits(paceInSec, paceUnit, dist, distUnit) {
     }
 
     var accum_dist; //the cumulative distance in the for loop
-    console.log("distance in pace unit: " + distInPaceUnit);
-    console.log(paceUnitNum);
     var num_splits = Math.ceil(distInPaceUnit);
     var splitNum; //the current split # in the for loop
     console.log("splits: " + num_splits);
@@ -184,14 +176,10 @@ function calcSplits(paceInSec, paceUnit, dist, distUnit) {
         }
 
     }
-    console.log(split_info);
     return split_info;
 }
 
 function validTime(hr, min, sec) {
-    //console.log(hr==="");
-    //console.log(hr >= 0 );
-    //console.log(parseInt(hr) == hr);
     //issue: type conversion for Number.isInteger. So i will do it the jank way lol
     var hrBool = hr === "" || (hr >= 0 && parseInt(hr) == hr);
     var minBool = min === "" || (min >= 0 && min < 60 && parseInt(min) == min);
@@ -204,7 +192,6 @@ function validTime(hr, min, sec) {
 }
 
 function validDist(dist) {
-    console.log(dist !== "");
     return dist !== "" && dist > 0;
 }
 

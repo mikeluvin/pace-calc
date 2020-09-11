@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, TextField, Grid, InputLabel, MenuItem, Select, makeStyles, FormHelperText, FormControl } from '@material-ui/core';
+import { TextField, Grid, InputLabel, MenuItem, Select, makeStyles, FormControl } from '@material-ui/core';
 import './App.css';
 
 const useStyles = makeStyles((theme) => ({
@@ -19,14 +19,12 @@ export default function Pace(props) {
 
 
     return (
-        <Container>
-            <Grid>
+        <React.Fragment>
                 <Grid className="main" container direction="row" alignItems="center">
                     <Grid item>
                         <TextField id="hr" label="hr" type="number" min="0" variant="outlined"
                             onChange={(event) => {
                                 var value = event.target.value;
-                                console.log(value);
                                 value.match("^[0-9]*$") ? onHrChange(value) : onHrChange("");
                                 
                                 }} 
@@ -38,7 +36,6 @@ export default function Pace(props) {
                         <TextField id="min" label="min" type="number" min="0" max="60" step="1" variant="outlined"
                             onChange={(event) => {
                                 var value = event.target.value;
-                                console.log(value);
                                 //regex to validate input! no decimals or negatives allowed.
                                 value.match("^[0-9]*$") ? onMinChange(value) : onMinChange("");
                                 
@@ -51,8 +48,6 @@ export default function Pace(props) {
                         {/*need to have a diff styling for when the input is invalid*/}
                         <TextField id="sec" label="sec" type="number" min="0" max="60" variant="outlined"
                             onChange={(event) => {
-                                var value = event.target.value;
-                                console.log(value);
                                 //now, we only don't want negatives..idk, might have to do something else now. Cause
                                 // I want the numbers input to pop up on mobile, so I should have "number" as the type..but the issue
                                 // is that onChange isn't trigged when you type a "-" or a "." and idk why. This isn't an issue if i don't
@@ -86,8 +81,7 @@ export default function Pace(props) {
                             </FormControl>
                     </Grid>
                 </Grid>
-            </Grid>
-        </Container>
+        </React.Fragment> 
 
     );
 }

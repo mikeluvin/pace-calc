@@ -3,10 +3,18 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
+import { ThemeProvider } from '@material-ui/core';
+import theme from './Palette';
+import "./App.css";
+import { StylesProvider } from "@material-ui/core/styles";
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <ThemeProvider theme={theme}>
+      <StylesProvider>
+        <App />
+      </StylesProvider>
+    </ThemeProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );

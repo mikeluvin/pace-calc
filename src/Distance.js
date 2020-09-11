@@ -1,5 +1,5 @@
 import React from 'react';
-import { Container, TextField, Grid, InputLabel, MenuItem, Select, makeStyles, FormHelperText, FormControl } from '@material-ui/core';
+import { TextField, Grid, MenuItem, Select, makeStyles, FormControl } from '@material-ui/core';
 import './App.css';
 
 const useStyles = makeStyles((theme) => ({
@@ -21,17 +21,13 @@ export default function Distance(props) {
 
 
     return (
-        <Container>
-            <Grid>
+        <React.Fragment>
                 <Grid className="main" container direction="row">
                     <Grid item>
-                        <TextField id="dist" label="dist" type="number" min="0" variant="outlined"
+                        <TextField className="distText" id="dist" label="dist" type="number" min="0" variant="outlined"
                             onChange={(event) => {
                                 var value = event.target.value;
-                                console.log(value);
-                                onDistChange(value);
-                                //value.match("^[0-9]*$") ? setHours(value) : setHours("");
-                                
+                                onDistChange(value);                                
                                 }} 
                             value={dist}
                             error={dist < 0} /> 
@@ -55,8 +51,6 @@ export default function Distance(props) {
                             </FormControl>
                     </Grid>
                 </Grid>
-            </Grid>
-        </Container>
-
+        </React.Fragment>
     );
 }

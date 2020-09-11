@@ -5,19 +5,12 @@ import Pace from './Pace';
 import Layout from './Layout';
 import { calcPace, calcDist, calcTime, calcSplits, validTime, validDist,  } from "./calculations";
 import { Container, Grid, Button, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions,
-  Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@material-ui/core";
-import { StylesProvider } from "@material-ui/core/styles";
+  Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@material-ui/core";
 import './App.css';
 
 
-/*const useStyles = makeStyles({
-  table: {
-    minWidth: 650,
-  },
-});
-*/
+
 function App() {
-  //const classes = useStyles();
   //we will only store the state here. It just makes more sense. Then, we can pass down the state
   //as props to populate the given text inputs.
   const [timeHr, setTimeHr] = useState("");
@@ -181,8 +174,7 @@ function App() {
   }
 
   return (
-    <StylesProvider>
-      <Layout className="title">
+    <Layout className="title">
     <Container className="App">
       <Grid container direction="column" spacing={2} justify-content="space-evenly" alignItems="center">
       <Grid item >
@@ -197,7 +189,7 @@ function App() {
               </TableRow>
             </TableHead>
             <TableBody>
-              <TableCell align="left" colspan={2}>
+              <TableCell align="left" colSpan={2}>
                 <Time hr={timeHr} min={timeMin} sec={timeSec} onHrChange={timeHrHandler} onMinChange={timeMinHandler} onSecChange={timeSecHandler}/>
               </TableCell>
             </TableBody>
@@ -235,7 +227,7 @@ function App() {
               </TableRow>
             </TableHead>
             <TableBody>
-              <TableCell align="left" colspan={2}>
+              <TableCell align="left" colSpan={2}>
                 <Pace hr={paceHr} min={paceMin} sec={paceSec} unit={paceUnit} onHrChange={paceHrHandler} onMinChange={paceMinHandler} onSecChange={paceSecHandler} onUnitChange={paceUnitHandler}/>
               </TableCell>
             </TableBody>
@@ -243,16 +235,26 @@ function App() {
         </TableContainer>
       </Grid>
       <Grid item>
-      <Grid container direction="row" alignItems="center" spacing={1}>
-        <Grid item>
+      <Grid container direction="row" alignItems="center">
+        {/* <Grid item> */}
           <Button variant="contained" color="primary" onClick={handleSplitsClick}>Show Splits</Button>
-        </Grid>
-        <Grid item>
+        {/* </Grid> */}
+        {/* <Grid item> */}
+        <Typography>&nbsp;&nbsp;</Typography>
           <Button variant="contained" color="primary" onClick={handleReset}>Reset</Button>
+        {/* </Grid> */}
       </Grid>
       </Grid>
+      <Grid item>
+        <a href="https://sites.northwestern.edu/runners/" target="_blank" rel="noopener noreferrer">
+          <img className="nutcLogo" src={require("./nutclogo.jpg")} alt="NUTC logo"/>
+        </a>
+      </Grid>
+      <Grid item>
+        <Typography>Developed by an NUTC member, Class of 2022</Typography>
       </Grid>
       </Grid>
+      
 
       <Dialog open={paceErrDialogOpen} onClose={() => {setPaceErrDialogOpen(false)}} >
             <DialogTitle>Oops!</DialogTitle>
@@ -262,7 +264,7 @@ function App() {
             </DialogContentText>
             </DialogContent>
             <DialogActions>
-              <Button variant="outlined" onClick={() => setPaceErrDialogOpen(false)}>Close</Button>
+              <Button variant="contained" color="secondary" onClick={() => setPaceErrDialogOpen(false)}>Close</Button>
             </DialogActions>
       </Dialog>
 
@@ -274,7 +276,7 @@ function App() {
             </DialogContentText>
             </DialogContent>
             <DialogActions>
-              <Button variant="outlined" onClick={() => setDistErrDialogOpen(false)}>Close</Button>
+              <Button variant="contained" color="secondary" onClick={() => setDistErrDialogOpen(false)}>Close</Button>
             </DialogActions>
       </Dialog>
 
@@ -286,7 +288,7 @@ function App() {
             </DialogContentText>
             </DialogContent>
             <DialogActions>
-              <Button variant="outlined" onClick={() => setTimeErrDialogOpen(false)}>Close</Button>
+              <Button variant="contained" color="secondary" onClick={() => setTimeErrDialogOpen(false)}>Close</Button>
             </DialogActions>
       </Dialog>
 
@@ -298,7 +300,7 @@ function App() {
             </DialogContentText>
             </DialogContent>
             <DialogActions>
-              <Button variant="outlined" onClick={() => setSplitsErrDialogOpen(false)}>Close</Button>
+              <Button variant="contained" color="secondary" onClick={() => setSplitsErrDialogOpen(false)}>Close</Button>
             </DialogActions>
       </Dialog>
 
@@ -329,12 +331,11 @@ function App() {
               </TableContainer>
             </DialogContent>
             <DialogActions>
-              <Button variant="outlined" onClick={() => setSplitsDialogOpen(false)}>Close</Button>
+              <Button variant="contained" color="secondary" onClick={() => setSplitsDialogOpen(false)}>Close</Button>
             </DialogActions>
       </Dialog>
    </Container>
    </Layout>
-   </StylesProvider>
   );
 }
 
