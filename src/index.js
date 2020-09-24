@@ -7,14 +7,24 @@ import { ThemeProvider } from '@material-ui/core';
 import theme from './Palette';
 import "./App.css";
 import { StylesProvider } from "@material-ui/core/styles";
+import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
 
 ReactDOM.render(
   <React.StrictMode>
-    <ThemeProvider theme={theme}>
-      <StylesProvider>
-        <App />
-      </StylesProvider>
-    </ThemeProvider>
+    <Router>
+      <ThemeProvider theme={theme}>
+        <StylesProvider>
+          <Switch>
+            <Route exact path="/">
+              <App />
+            </Route>
+            <Route path="/">
+              <Redirect to="/" />
+            </Route>  
+          </Switch>
+        </StylesProvider>
+      </ThemeProvider>
+    </Router>
   </React.StrictMode>,
   document.getElementById('root')
 );
