@@ -42,6 +42,11 @@
   height: 23.34vmin;
 }
 
+/*had to do this due to weird rendering on iOS */
+#literally-blank {
+  user-select: none;
+}
+
 @media screen and (min-width: 768px){
   .title {
     font-size: 36px !important;

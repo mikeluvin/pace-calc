@@ -31,44 +31,6 @@ function App() {
   const [splitsErrDialogOpen, setSplitsErrDialogOpen] = useState(false);
   const [splitsVec, setSplitsVec] = useState([]);
 
-  //this is going to get very cumbersome...but maybe still better than just putting the
-  //entire app in one page? idk man, idk.
-  const timeHrHandler = (hrs) => {
-    setTimeHr(hrs);
-  }
-
-  const timeMinHandler = (mins) => {
-    setTimeMin(mins);
-  }
-
-  const timeSecHandler = (secs) => {
-    setTimeSec(secs);
-  }
-
-  const distHandler = (dist) => {
-    setDist(dist);
-  }
-
-  const distUnitHandler = (unit) => {
-    setDistUnit(unit);
-  }
-
-  const paceHrHandler = (hrs) => {
-    setPaceHr(hrs);
-  }
-
-  const paceMinHandler = (mins) => {
-    setPaceMin(mins);
-  }
-
-  const paceSecHandler = (secs) => {
-    setPaceSec(secs);
-  }
-
-  const paceUnitHandler = (unit) => {
-    setPaceUnit(unit);
-  }
-
   const makeTimeNums = (hr, min, sec) => {
     var hrNum = hr;
     var minNum = min;
@@ -190,7 +152,7 @@ function App() {
             </TableHead>
             <TableBody>
               <TableCell align="left" colSpan={2}>
-                <Time hr={timeHr} min={timeMin} sec={timeSec} onHrChange={timeHrHandler} onMinChange={timeMinHandler} onSecChange={timeSecHandler}/>
+                <Time hr={timeHr} min={timeMin} sec={timeSec} onHrChange={(hrs)=>setTimeHr(hrs)} onMinChange={(mins)=>setTimeMin(mins)} onSecChange={(secs)=>setTimeSec(secs)}/>
               </TableCell>
             </TableBody>
           </Table>
@@ -209,7 +171,7 @@ function App() {
             </TableHead>
             <TableBody>
               <TableCell align="left" colSpan={2}>
-                  <Distance dist={dist} unit={distUnit} onDistChange={distHandler} onUnitChange={distUnitHandler}/>
+                  <Distance dist={dist} unit={distUnit} onDistChange={(dist)=>setDist(dist)} onUnitChange={(unit)=>setDistUnit(unit)}/>
               </TableCell>
             </TableBody>
           </Table>
@@ -228,7 +190,7 @@ function App() {
             </TableHead>
             <TableBody>
               <TableCell align="left" colSpan={2}>
-                <Pace hr={paceHr} min={paceMin} sec={paceSec} unit={paceUnit} onHrChange={paceHrHandler} onMinChange={paceMinHandler} onSecChange={paceSecHandler} onUnitChange={paceUnitHandler}/>
+                <Pace hr={paceHr} min={paceMin} sec={paceSec} unit={paceUnit} onHrChange={(hrs)=>setPaceHr(hrs)} onMinChange={(mins)=>setPaceMin(mins)} onSecChange={(secs)=>setPaceSec(secs)} onUnitChange={(unit)=>setPaceUnit(unit)}/>
               </TableCell>
             </TableBody>
           </Table>
@@ -240,7 +202,7 @@ function App() {
           <Button variant="contained" color="primary" onClick={handleSplitsClick}>Show Splits</Button>
         {/* </Grid> */}
         {/* <Grid item> */}
-        <Typography>&nbsp;&nbsp;</Typography>
+        <Typography id="literally-blank">&nbsp;&nbsp;</Typography>
           <Button variant="contained" color="primary" onClick={handleReset}>Reset</Button>
         {/* </Grid> */}
       </Grid>
