@@ -20,6 +20,7 @@ function App() {
   //the children don't communicate with App until there's a change bc of how the selector works
   //so i'm initializing as miles
   const [distUnit, setDistUnit] = useState("miles");
+  const [commonDist, setCommonDist] = useState("");
   const [paceHr, setPaceHr] = useState("");
   const [paceMin, setPaceMin] = useState("");
   const [paceSec, setPaceSec] = useState("");
@@ -123,12 +124,51 @@ function App() {
     }
   }
 
+  const handleCommonDist = (dist) => {
+    switch(dist) {
+      case "5K":
+        setDist(5.0);
+        setDistUnit("km");
+        setCommonDist(dist);
+        break;
+      case "10K":
+        setDist(10.0);
+        setDistUnit("km");
+        setCommonDist(dist);
+        break;
+      case "Half-Marathon":
+        setDist(13.1094);
+        setDistUnit("miles");
+        setCommonDist(dist);
+        break;
+      case "Marathon":
+        setDist(26.2188);
+        setDistUnit("miles");
+        setCommonDist(dist);
+        break;
+      case "8K":
+        setDist(8.0);
+        setDistUnit("km");
+        setCommonDist(dist);
+        break;
+      case "5M":
+        setDist(5.0);
+        setDistUnit("miles");
+        setCommonDist(dist);
+        break;
+      case "":
+        setCommonDist(dist);
+        break;
+    }
+  }
+
   const handleReset = () => {
     setTimeHr("");
     setTimeMin("");
     setTimeSec("");
     setDist("");
     setDistUnit("miles");
+    setCommonDist("");
     setPaceHr("");
     setPaceMin("");
     setPaceSec("");
@@ -171,7 +211,7 @@ function App() {
             </TableHead>
             <TableBody>
               <TableCell align="left" colSpan={2}>
-                  <Distance dist={dist} unit={distUnit} onDistChange={(dist)=>setDist(dist)} onUnitChange={(unit)=>setDistUnit(unit)}/>
+                  <Distance dist={dist} unit={distUnit} commonDist={commonDist} onDistChange={(dist)=>setDist(dist)} onUnitChange={(unit)=>setDistUnit(unit)} onCommonDistChange={handleCommonDist}/>
               </TableCell>
             </TableBody>
           </Table>
