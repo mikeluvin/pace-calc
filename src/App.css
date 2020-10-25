@@ -30,7 +30,7 @@
 }
 
 .distText {
-  max-width: 18vmin;
+  max-width: 22vmin !important;
 }
 
 .MuiButton-root {

@@ -156,8 +156,15 @@ function App() {
         setDistUnit("miles");
         setCommonDist(dist);
         break;
+      case "10M":
+        setDist(10.0);
+        setDistUnit("miles");
+        setCommonDist(dist);
       case "":
         setCommonDist(dist);
+        break;
+      default:
+        setCommonDist("");
         break;
     }
   }
