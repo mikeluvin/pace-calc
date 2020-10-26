@@ -18,9 +18,7 @@ ReactDOM.render(
             <Route exact path="/">
               <App />
             </Route>
-            <Route path="/">
-              <Redirect to="/" />
-            </Route>  
+            <Redirect from="*" to="/" />
           </Switch>
         </StylesProvider>
       </ThemeProvider>
